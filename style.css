@@ -150,9 +150,12 @@ button:hover {
 
 /* -------- Match Result -------- */
 #matchResult {
-  margin-top: 20px;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 10px;
   font-weight: 600;
-  white-space: pre-line;
+  background: rgba(34,197,94,0.15);
+  border: 1px solid rgba(34,197,94,0.4);
 }
 
 /* ---------- DASHBOARD ---------- */
@@ -242,15 +245,15 @@ button:hover {
 
 .match-card{
   background: rgba(255,255,255,0.07);
-  padding: 18px;
-  border-radius: 14px;
+  padding: 20px;
+  border-radius: 16px;
   border: 1px solid rgba(255,255,255,0.08);
   transition: 0.3s ease;
 }
 
 .match-card:hover{
-  transform: translateY(-3px);
-  background: rgba(255,255,255,0.09);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
 /* ---------- RESPONSIVE ---------- */
@@ -270,5 +273,59 @@ button:hover {
 
   h1 {
     font-size: 24px;
+  }
+}
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  opacity: 0.7;
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: 12px;
+  margin-top: 15px;
+}
+.chip{
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid rgba(255,255,255,0.10);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.loader {
+  border: 4px solid rgba(255,255,255,0.1);
+  border-top: 4px solid #8b5cf6;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+@media (max-width: 768px){
+
+  .navbar{
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-links{
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card{
+    padding: 18px;
+  }
+
+  .container{
+    padding: 20px;
   }
 }
