@@ -1,4 +1,4 @@
-console.log("Script running with GEO enabled");
+console.log("SAFE VERSION LOADED");
 
 import { db } from "./firebase-config.js";
 import {
@@ -10,10 +10,8 @@ import {
 const form = document.getElementById("foodForm");
 const ngoForm = document.getElementById("ngoForm");
 const foodList = document.getElementById("foodList");
-const resultBox = document.getElementById("matchResult");
 
-
-/* ---------------- FOOD FORM ---------------- */
+/* FOOD FORM */
 if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -22,38 +20,28 @@ if (form) {
     const quantity = Number(document.getElementById("quantity").value);
     const location = document.getElementById("location").value.trim();
 
-    if (!navigator.geolocation) {
-      alert("Geolocation not supported");
-      return;
-    }
-
     navigator.geolocation.getCurrentPosition(async (position) => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-
       try {
         await addDoc(collection(db, "FoodSurplus"), {
           title,
           quantity,
           location,
-          lat,
-          lng,
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
           status: "available",
           createdAt: new Date()
         });
 
         alert("Food Posted Successfully!");
         form.reset();
-
-      } catch (error) {
-        console.error("Error adding food:", error);
+      } catch (err) {
+        console.error(err);
       }
     });
   });
 }
 
-
-/* ---------------- NGO FORM ---------------- */
+/* NGO FORM */
 if (ngoForm) {
   ngoForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -63,63 +51,50 @@ if (ngoForm) {
     const locationNGO = document.getElementById("locationNGO").value.trim();
     const urgency = document.getElementById("urgency").value;
 
-    if (!navigator.geolocation) {
-      alert("Geolocation not supported");
-      return;
-    }
-
     navigator.geolocation.getCurrentPosition(async (position) => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-
       try {
         await addDoc(collection(db, "NGORequests"), {
           ngoName,
           quantityNeeded,
           location: locationNGO,
           urgency,
-          lat,
-          lng,
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
           status: "pending",
           createdAt: new Date()
         });
 
-        alert("NGO Requirement Posted!");
+        alert("NGO Posted Successfully!");
         ngoForm.reset();
-
-      } catch (error) {
-        console.error("Error adding NGO request:", error);
+      } catch (err) {
+        console.error(err);
       }
     });
   });
 }
 
-
-/* ---------------- REAL-TIME FOOD LIST ---------------- */
+/* REALTIME LIST */
 if (foodList) {
   onSnapshot(collection(db, "FoodSurplus"), (snapshot) => {
     foodList.innerHTML = "";
 
-    snapshot.forEach((foodDoc) => {
-      const data = foodDoc.data();
+    snapshot.forEach((doc) => {
+      const data = doc.data();
 
-      const foodItem = document.createElement("div");
+      const div = document.createElement("div");
+      div.style.background = "#3a3a5f";
+      div.style.padding = "10px";
+      div.style.margin = "10px 0";
+      div.style.borderRadius = "8px";
 
-      foodItem.style.background =
-        data.status === "matched" ? "#7f1d1d" : "#3a3a5f";
-
-      foodItem.style.padding = "12px";
-      foodItem.style.margin = "10px 0";
-      foodItem.style.borderRadius = "8px";
-
-      foodItem.innerHTML = `
+      div.innerHTML = `
         <strong>${data.title}</strong><br>
-        Quantity: ${data.quantity}<br>
+        Qty: ${data.quantity}<br>
         Location: ${data.location}<br>
         Status: ${data.status}
       `;
 
-      foodList.appendChild(foodItem);
+      foodList.appendChild(div);
     });
   });
 }
