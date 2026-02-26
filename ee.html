@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rescue Bite</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- 🔥 MAIN NAVBAR -->
+  <nav class="navbar">
+    <h2 class="logo">Rescue Bite 🍱</h2>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="smart-match.html">Smart Match</a>
+      <a href="#how">How It Works</a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="topbar">
+    <div class="brand">
+      <h1>Rescue Bite</h1>
+      <p>Connect surplus food with NGOs instantly.</p>
+      <small class="muted">
+        Real-time matching powered by Firebase Firestore
+      </small>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- 🥗 POST FOOD -->
+    <section class="card" id="donate">
+      <h2>Post Surplus Food</h2>
+      <p class="muted">Donors can list extra food available for pickup.</p>
+
+      <form id="foodForm" class="form">
+        <input type="text" id="title" placeholder="Food Title" required>
+        <input type="number" id="quantity" placeholder="Quantity" required>
+        <input type="text" id="location" placeholder="Location" required>
+        <button type="submit">Post Food</button>
+      </form>
+      <div id="foodSuccess" class="success-msg"></div>
+    </section>
+
+    <!-- 🏢 NGO REQUEST -->
+    <section class="card" id="ngo">
+      <h2>Post NGO Requirement</h2>
+      <p class="muted">NGOs can post urgent food needs for quick matching.</p>
+
+      <form id="ngoForm" class="form">
+        <input type="text" id="ngoName" placeholder="NGO Name" required>
+        <input type="number" id="quantityNeeded" placeholder="Quantity Needed" required>
+        <input type="text" id="locationNGO" placeholder="Location" required>
+
+        <select id="urgency">
+          <option value="High">High Urgency</option>
+          <option value="Medium">Medium Urgency</option>
+          <option value="Low">Low Urgency</option>
+        </select>
+
+        <button type="submit">Post Requirement</button>
+      </form>
+
+      <div id="matchResult" class="match-result"></div>
+    </section>
+
+    <!-- 📋 LISTINGS -->
+    <section class="card" id="listings">
+      <h2>Available Food Listings</h2>
+      <p class="muted">Live feed from Firestore.</p>
+
+      <div id="foodList"></div>
+
+      <div id="emptyState" class="empty-state">
+  <p>No food posts yet.</p>
+  <small>Start by adding surplus food above.</small>
+</div>
+    </section>
+
+    <!-- ⚙ HOW IT WORKS -->
+    <section class="card" id="how">
+      <h2>How It Works</h2>
+      <ol class="how-list">
+        <li>Donor posts surplus food.</li>
+        <li>NGO posts their requirement.</li>
+        <li>System checks location and quantity.</li>
+        <li>Match result appears instantly.</li>
+      </ol>
+      <p class="muted">
+        Our goal is to reduce food waste and help communities in need.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    Built for Hackathon • Rescue Bite © 2026
+  </footer>
+
+  <script type="module" src="script.js"></script>
+
+</body>
+</html>
