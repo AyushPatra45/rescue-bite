@@ -66,11 +66,18 @@ ngoForm.addEventListener("submit", async (e) => {
       }
     });
 
-    if (matchFound) {
-      alert("🔥 MATCH FOUND!");
-    }
+    const resultBox = document.getElementById("matchResult");
+resultBox.innerText = ""; // clear previous result
 
-    alert("NGO Requirement Posted Successfully!");
+if (matchFound) {
+  resultBox.innerText =
+    "🔥 MATCH FOUND! Food available in " + locationNGO +
+    "\n✅ NGO Requirement Posted Successfully!";
+} else {
+  resultBox.innerText =
+    "❌ No matching food found in " + locationNGO +
+    "\n✅ NGO Requirement Posted Successfully!";
+}
     ngoForm.reset();
 
   } catch (error) {
