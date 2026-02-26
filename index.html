@@ -36,4 +36,82 @@
 <script type="module" src="script.js"></script>
 
 </body>
+<body>
+
+  <!-- Top Header -->
+  <header class="topbar">
+    <div class="brand">
+      <h1>Rescue Bite 🍱</h1>
+      <p>Firebase-based food rescue web app — connect surplus food with NGOs.</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- Provider Form -->
+    <section class="card">
+      <h2>Post Surplus Food</h2>
+      <p class="muted">Donors can list extra food available for pickup.</p>
+
+      <form id="foodForm" class="form">
+        <div class="field">
+          <label for="title">Food Title</label>
+          <input type="text" id="title" placeholder="Food Title" required>
+        </div>
+
+        <div class="field">
+          <label for="quantity">Quantity</label>
+          <input type="number" id="quantity" placeholder="Quantity" required>
+        </div>
+
+        <div class="field">
+          <label for="location">Location</label>
+          <input type="text" id="location" placeholder="Location" required>
+        </div>
+
+        <button type="submit" class="btn primary">Post Food</button>
+      </form>
+    </section>
+
+    <!-- NGO Form -->
+    <section class="card">
+      <h2>Post NGO Requirement</h2>
+      <p class="muted">NGOs can post urgent food needs for quick matching.</p>
+
+      <form id="ngoForm" class="form">
+        <div class="field">
+          <label for="ngoName">NGO Name</label>
+          <input type="text" id="ngoName" placeholder="NGO Name" required>
+        </div>
+
+        <div class="field">
+          <label for="quantityNeeded">Quantity Needed</label>
+          <input type="number" id="quantityNeeded" placeholder="Quantity Needed" required>
+        </div>
+
+        <div class="field">
+          <label for="locationNGO">Location</label>
+          <input type="text" id="locationNGO" placeholder="Location" required>
+        </div>
+
+        <div class="field">
+          <label for="urgency">Urgency</label>
+          <select id="urgency">
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn">Post Requirement</button>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- Keep script exactly as it is -->
+  <script type="module" src="script.js"></script>
+
+</body>
 </html>
