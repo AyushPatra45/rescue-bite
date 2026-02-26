@@ -1,7 +1,6 @@
 import { db } from "./firebase-config.js";
 import {
   collection,
-  onSnapshot,
   getDocs,
   updateDoc,
   doc
@@ -12,6 +11,7 @@ const matchGrid = document.querySelector(".match-grid");
 /* ---------------- DISTANCE CALCULATION ---------------- */
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Earth radius in KM
+
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
 
@@ -44,11 +44,18 @@ async function generateMatches() {
       const food = foodDoc.data();
 
       if (food.status !== "available") return;
-      if (!food.lat || !ngo.lat) return; // safety check
 
-      let score = 0;
+      // ✅ Proper geo safety check
+      if (
+        food.lat == null ||
+        food.lng == null ||
+        ngo.lat == null ||
+        ngo.lng == null
+      ) {
+        return;
+      }
 
-      /* -------- DISTANCE + ETA -------- */
+      /* -------- DISTANCE CALCULATION -------- */
       const distance = calculateDistance(
         food.lat,
         food.lng,
@@ -56,11 +63,12 @@ async function generateMatches() {
         ngo.lng
       );
 
-      const estimatedTime = (distance / 30) * 60; // 30 km/h avg city speed
+      const estimatedTime = (distance / 30) * 60; // 30km/h avg speed
 
+      let score = 0;
       let canConfirm = false;
 
-      /* -------- DISTANCE THRESHOLD LOGIC -------- */
+      /* -------- DISTANCE SCORING -------- */
       if (distance <= 8) {
         score += 50;
         canConfirm = true;
@@ -150,8 +158,8 @@ async function generateMatches() {
   }
 }
 
-/* -------- REAL-TIME REFRESH -------- */
-generateMatches();
+/* ---------------- REFRESH BUTTON ---------------- */
+document.getElementById("refreshBtn")?.addEventListener("click", generateMatches);
 
-onSnapshot(collection(db, "FoodSurplus"), generateMatches);
-onSnapshot(collection(db, "NGORequests"), generateMatches);
+/* ---------------- INITIAL LOAD ---------------- */
+generateMatches();
