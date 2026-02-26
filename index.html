@@ -27,21 +27,24 @@
         A real-time food redistribution platform connecting donors and NGOs instantly.
       </p>
 
-      <!-- Login Card (UI only) -->
+      <!-- Login Card -->
       <div class="auth-card">
         <h3 style="margin:0 0 6px;">Sign in</h3>
-        <p class="muted" style="margin:0 0 14px;">Use demo credentials for now.</p>
+        <p class="muted" style="margin:0 0 14px;">Login with valid Firebase credentials.</p>
 
-        <form class="form">
-          <input type="email" placeholder="Email" required />
-          <input type="password" placeholder="Password" required />
+        <!-- ✅ REAL LOGIN FORM -->
+        <form id="loginForm" class="form">
+          <input id="loginEmail" type="email" placeholder="Email" required />
+          <input id="loginPassword" type="password" placeholder="Password" required />
 
-          <!-- UI-only redirect -->
-          <a class="btn-primary big-btn" href="role.html">Login</a>
+          <button type="submit" class="btn-primary big-btn">Login</button>
         </form>
 
+        <!-- ✅ Message Box -->
+        <div id="loginMsg" class="match-result" style="display:none; margin-top:12px;"></div>
+
         <p class="muted" style="margin-top: 12px; font-size:12px;">
-          (Auth can be connected later using Firebase Auth)
+          (Email/Password must be enabled in Firebase Auth → Users must exist)
         </p>
       </div>
     </div>
@@ -50,6 +53,61 @@
   <footer class="footer">
     Built for Hackathon • Rescue Bite © 2026
   </footer>
+
+  <!-- ✅ Firebase Auth Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDKOtJ9bPWH91-stp-iow8v9f_yNRKUi3c",
+      authDomain: "rescue-bite-d5058.firebaseapp.com",
+      projectId: "rescue-bite-d5058",
+      storageBucket: "rescue-bite-d5058.firebasestorage.app",
+      messagingSenderId: "1025906539351",
+      appId: "1:1025906539351:web:e3bfbea5e18748c5531c12",
+      measurementId: "G-MYJE5S51T2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const form = document.getElementById("loginForm");
+    const msgBox = document.getElementById("loginMsg");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+
+      // Reset message UI
+      msgBox.style.display = "none";
+      msgBox.textContent = "";
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+
+        // ✅ success message
+        msgBox.style.display = "block";
+        msgBox.style.background = "rgba(34,197,94,0.15)";
+        msgBox.style.border = "1px solid rgba(34,197,94,0.4)";
+        msgBox.textContent = "✅ Login successful! Redirecting...";
+
+        setTimeout(() => {
+          window.location.href = "role.html";
+        }, 700);
+
+      } catch (err) {
+        // ❌ error message
+        msgBox.style.display = "block";
+        msgBox.style.background = "rgba(239,68,68,0.15)";
+        msgBox.style.border = "1px solid rgba(239,68,68,0.4)";
+        msgBox.textContent = "❌ Invalid email or password.";
+        console.error("Login error:", err);
+      }
+    });
+  </script>
 
 </body>
 </html>
