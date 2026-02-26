@@ -1,12 +1,16 @@
 console.log("Script is running");
 
 import { db } from "./firebase-config.js";
-import { collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+import { collection, addDoc, getDocs, onSnapshot } 
+from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 const form = document.getElementById("foodForm");
 const ngoForm = document.getElementById("ngoForm");
+const foodList = document.getElementById("foodList");
 
-// FOOD FORM
+
+// ---------------- FOOD FORM ----------------
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -30,7 +34,8 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-// NGO FORM
+
+// ---------------- NGO FORM ----------------
 ngoForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -67,20 +72,46 @@ ngoForm.addEventListener("submit", async (e) => {
     });
 
     const resultBox = document.getElementById("matchResult");
-resultBox.innerText = ""; // clear previous result
+    resultBox.innerText = "";
 
-if (matchFound) {
-  resultBox.innerText =
-    "🔥 MATCH FOUND! Food available in " + locationNGO +
-    "\n✅ NGO Requirement Posted Successfully!";
-} else {
-  resultBox.innerText =
-    "❌ No matching food found in " + locationNGO +
-    "\n✅ NGO Requirement Posted Successfully!";
-}
+    if (matchFound) {
+      resultBox.innerText =
+        "🔥 MATCH FOUND! Food available in " + locationNGO +
+        "\n✅ NGO Requirement Posted Successfully!";
+    } else {
+      resultBox.innerText =
+        "❌ No matching food found in " + locationNGO +
+        "\n✅ NGO Requirement Posted Successfully!";
+    }
+
     ngoForm.reset();
 
   } catch (error) {
     console.error("Error adding NGO request: ", error);
   }
+});
+
+
+// ---------------- REAL-TIME FOOD LIST ----------------
+onSnapshot(collection(db, "FoodSurplus"), (snapshot) => {
+  foodList.innerHTML = "";
+
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+
+    const foodItem = document.createElement("div");
+    foodItem.style.background = "#3a3a5f";
+    foodItem.style.padding = "10px";
+    foodItem.style.margin = "8px 0";
+    foodItem.style.borderRadius = "6px";
+
+    foodItem.innerHTML = `
+      <strong>${data.title}</strong><br>
+      Quantity: ${data.quantity}<br>
+      Location: ${data.location}<br>
+      Status: ${data.status}
+    `;
+
+    foodList.appendChild(foodItem);
+  });
 });
