@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard • Rescue Bite</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <h1>Dashboard 📊</h1>
+      <p>Quick overview of activity. UI-only (data can be connected later).</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- KPI CARDS -->
+    <section class="dash-grid">
+      <div class="card kpi">
+        <div class="kpi-label">Active Food Posts</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-foot">surplus listed</div>
+      </div>
+
+      <div class="card kpi">
+        <div class="kpi-label">Active NGO Needs</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-foot">requests pending</div>
+      </div>
+
+      <div class="card kpi">
+        <div class="kpi-label">Matches Made</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-foot">rescues completed</div>
+      </div>
+    </section>
+
+    <!-- RECENT LISTS -->
+    <section class="dash-grid-2">
+
+      <div class="card">
+        <h2>Recent Food Posts</h2>
+        <p class="muted">Latest surplus listings (placeholder UI).</p>
+
+        <div class="list">
+          <div class="list-item">
+            <div>
+              <div class="item-title">Cooked Rice</div>
+              <div class="item-sub">20 meals • Tambaram</div>
+            </div>
+            <span class="chip ok">Available</span>
+          </div>
+
+          <div class="list-item">
+            <div>
+              <div class="item-title">Bread Packs</div>
+              <div class="item-sub">12 packs • Velachery</div>
+            </div>
+            <span class="chip warn">Expiring Soon</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Recent NGO Needs</h2>
+        <p class="muted">Latest NGO requests (placeholder UI).</p>
+
+        <div class="list">
+          <div class="list-item">
+            <div>
+              <div class="item-title">Helping Hands</div>
+              <div class="item-sub">15 meals • Tambaram</div>
+            </div>
+            <span class="chip danger">High</span>
+          </div>
+
+          <div class="list-item">
+            <div>
+              <div class="item-title">Night Shelter</div>
+              <div class="item-sub">10 meals • Medavakkam</div>
+            </div>
+            <span class="chip mid">Medium</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+</body>
+</html>
