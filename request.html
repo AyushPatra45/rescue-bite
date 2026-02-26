@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Food • Rescue Bite</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <h2 class="logo">Rescue Bite 🍱</h2>
+    <div class="nav-links">
+      <a href="role.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="smart-match.html">Smart Match</a>
+    </div>
+  </nav>
+
+  <header class="topbar">
+    <div class="brand">
+      <h1>Request Food 🏢</h1>
+      <p>NGOs can post urgent food needs for matching.</p>
+      <small class="muted">Real-time powered by Firebase Firestore</small>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="card">
+      <h2>Post NGO Requirement</h2>
+      <p class="muted">Submit what you need and we’ll match nearby donors.</p>
+
+      <form id="ngoForm" class="form">
+        <input type="text" id="ngoName" placeholder="NGO Name" required>
+        <input type="number" id="quantityNeeded" placeholder="Quantity Needed" required>
+        <input type="text" id="locationNGO" placeholder="Location" required>
+
+        <select id="urgency">
+          <option value="High">High Urgency</option>
+          <option value="Medium">Medium Urgency</option>
+          <option value="Low">Low Urgency</option>
+        </select>
+
+        <button type="submit">Post Requirement</button>
+      </form>
+
+      <div id="matchResult" class="match-result"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    Built for Hackathon • Rescue Bite © 2026
+  </footer>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>

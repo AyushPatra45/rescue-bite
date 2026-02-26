@@ -6,25 +6,44 @@
   <title>Dashboard • Rescue Bite</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <nav class="navbar">
-  <h2 class="logo">Rescue Bite 🍱</h2>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="smart-match.html">Smart Match</a>
-  </div>
-</nav>
-  
 
+<body>
+
+  <!-- ✅ Navbar (updated links for Welcome/Role flow) -->
+  <nav class="navbar">
+    <h2 class="logo">Rescue Bite 🍱</h2>
+    <div class="nav-links">
+      <a href="role.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="smart-match.html">Smart Match</a>
+      <a href="welcome.html">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Header -->
   <header class="topbar">
     <div class="brand">
       <h1>Dashboard 📊</h1>
-      <p>Quick overview of activity. UI-only (data can be connected later).</p>
+      <p>Quick overview of activity (live counts via Firestore).</p>
+      <small class="muted">Track food posts, NGO needs, and matches in real time.</small>
     </div>
   </header>
 
   <main class="container">
+
+    <!-- ✅ Quick Actions row (UI only) -->
+    <section class="card" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
+      <div>
+        <h2 style="margin:0;">Quick Actions</h2>
+        <p class="muted" style="margin:6px 0 0;">Go to donor/NGO entry pages or review matches.</p>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="donate.html" class="btn-primary" style="padding:12px 16px;">+ Donate Food</a>
+        <a href="request.html" class="btn-secondary" style="padding:12px 16px;">+ Request Food</a>
+        <a href="smart-match.html" class="btn-secondary" style="padding:12px 16px;">View Smart Match</a>
+      </div>
+    </section>
 
     <!-- KPI CARDS -->
     <section class="dash-grid">
@@ -52,7 +71,7 @@
 
       <div class="card">
         <h2>Recent Food Posts</h2>
-        <p class="muted">Latest surplus listings (placeholder UI).</p>
+        <p class="muted">Sample UI (can be connected to Firestore later).</p>
 
         <div class="list">
           <div class="list-item">
@@ -75,7 +94,7 @@
 
       <div class="card">
         <h2>Recent NGO Needs</h2>
-        <p class="muted">Latest NGO requests (placeholder UI).</p>
+        <p class="muted">Sample UI (can be connected to Firestore later).</p>
 
         <div class="list">
           <div class="list-item">
@@ -99,6 +118,13 @@
     </section>
 
   </main>
+
+  <!-- ✅ Footer -->
+  <footer class="footer">
+    Built for Hackathon • Rescue Bite © 2026
+  </footer>
+
+  <!-- Keep your existing JS -->
   <script type="module" src="dashboard.js"></script>
 </body>
 </html>

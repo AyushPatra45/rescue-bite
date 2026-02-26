@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donate Food • Rescue Bite</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <h2 class="logo">Rescue Bite 🍱</h2>
+    <div class="nav-links">
+      <a href="role.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="smart-match.html">Smart Match</a>
+    </div>
+  </nav>
+
+  <header class="topbar">
+    <div class="brand">
+      <h1>Donate Food 🍱</h1>
+      <p>Post surplus food for NGOs to claim.</p>
+      <small class="muted">Real-time powered by Firebase Firestore</small>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="card">
+      <h2>Post Surplus Food</h2>
+      <p class="muted">Donors can list extra food available for pickup.</p>
+
+      <form id="foodForm" class="form">
+        <input type="text" id="title" placeholder="Food Title" required>
+        <input type="number" id="quantity" placeholder="Quantity" required>
+        <input type="text" id="location" placeholder="Location" required>
+        <button type="submit">Post Food</button>
+      </form>
+      <div id="foodSuccess" class="success-msg"></div>
+    </section>
+
+    <section class="card">
+      <h2>Available Food Listings</h2>
+      <p class="muted">Live feed from Firestore.</p>
+
+      <div id="foodList"></div>
+
+      <div id="emptyState" class="empty-state">
+        <p>No food posts yet.</p>
+        <small>Start by adding surplus food above.</small>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    Built for Hackathon • Rescue Bite © 2026
+  </footer>
+
+  <!-- Keep same JS -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
