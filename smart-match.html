@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Match • Rescue Bite</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <h1>Smart Match 🤝</h1>
+      <p>Suggested matches based on location + quantity (UI-only view).</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Filters (UI only) -->
+    <section class="card">
+      <div class="match-head">
+        <div>
+          <h2 style="margin:0;">Suggested Matches</h2>
+          <p class="muted" style="margin:6px 0 0;">Review and confirm the best pairings.</p>
+        </div>
+
+        <div class="match-actions">
+          <select class="filter">
+            <option>Sort: Highest Score</option>
+            <option>Sort: Nearest Distance</option>
+            <option>Sort: Expiry Soon</option>
+          </select>
+          <button type="button">Refresh</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Match Cards -->
+    <section class="match-grid">
+
+      <article class="card match-card">
+        <div class="match-top">
+          <span class="chip ok">Score: 86%</span>
+          <span class="chip mid">3.2 km</span>
+          <span class="chip warn">Expiry: 2h</span>
+        </div>
+
+        <div class="match-body">
+          <div class="match-col">
+            <div class="match-title">Food</div>
+            <div class="match-main">Cooked Rice</div>
+            <div class="match-sub">Qty: 20 meals</div>
+            <div class="match-sub">Location: Tambaram</div>
+          </div>
+
+          <div class="match-arrow">→</div>
+
+          <div class="match-col">
+            <div class="match-title">NGO</div>
+            <div class="match-main">Helping Hands</div>
+            <div class="match-sub">Needs: 15 meals</div>
+            <div class="match-sub">Location: Tambaram</div>
+          </div>
+        </div>
+
+        <div class="match-footer">
+          <button type="button">Confirm Match</button>
+          <button type="button" class="btn-ghost">Reject</button>
+        </div>
+      </article>
+
+      <article class="card match-card">
+        <div class="match-top">
+          <span class="chip ok">Score: 74%</span>
+          <span class="chip mid">7.8 km</span>
+          <span class="chip ok">Expiry: Safe</span>
+        </div>
+
+        <div class="match-body">
+          <div class="match-col">
+            <div class="match-title">Food</div>
+            <div class="match-main">Biscuit Packs</div>
+            <div class="match-sub">Qty: 40 packs</div>
+            <div class="match-sub">Location: Velachery</div>
+          </div>
+
+          <div class="match-arrow">→</div>
+
+          <div class="match-col">
+            <div class="match-title">NGO</div>
+            <div class="match-main">Night Shelter</div>
+            <div class="match-sub">Needs: 30 packs</div>
+            <div class="match-sub">Location: Medavakkam</div>
+          </div>
+        </div>
+
+        <div class="match-footer">
+          <button type="button">Confirm Match</button>
+          <button type="button" class="btn-ghost">Reject</button>
+        </div>
+      </article>
+
+      <article class="card match-card">
+        <div class="match-top">
+          <span class="chip mid">Score: 61%</span>
+          <span class="chip mid">5.4 km</span>
+          <span class="chip danger">Expiry: Soon</span>
+        </div>
+
+        <div class="match-body">
+          <div class="match-col">
+            <div class="match-title">Food</div>
+            <div class="match-main">Veg Curry</div>
+            <div class="match-sub">Qty: 10 meals</div>
+            <div class="match-sub">Location: Pallikaranai</div>
+          </div>
+
+          <div class="match-arrow">→</div>
+
+          <div class="match-col">
+            <div class="match-title">NGO</div>
+            <div class="match-main">Community Kitchen</div>
+            <div class="match-sub">Needs: 10 meals</div>
+            <div class="match-sub">Location: Pallikaranai</div>
+          </div>
+        </div>
+
+        <div class="match-footer">
+          <button type="button">Confirm Match</button>
+          <button type="button" class="btn-ghost">Reject</button>
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+</body>
+</html>
