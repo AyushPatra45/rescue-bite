@@ -9,6 +9,24 @@ import {
 
 const matchGrid = document.querySelector(".match-grid");
 
+/* ---------------- DISTANCE CALCULATION ---------------- */
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth radius in KM
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+/* ---------------- MATCH GENERATION ---------------- */
 async function generateMatches() {
   if (!matchGrid) return;
 
@@ -20,33 +38,51 @@ async function generateMatches() {
   ngoSnap.forEach((ngoDoc) => {
     const ngo = ngoDoc.data();
 
-    // Only match pending requests
     if (ngo.status !== "pending") return;
 
     foodSnap.forEach((foodDoc) => {
       const food = foodDoc.data();
 
       if (food.status !== "available") return;
+      if (!food.lat || !ngo.lat) return; // safety check
 
       let score = 0;
 
-      // LOCATION MATCH
-      if (
-        String(food.location).toLowerCase().trim() ===
-        String(ngo.location).toLowerCase().trim()
-      ) {
+      /* -------- DISTANCE + ETA -------- */
+      const distance = calculateDistance(
+        food.lat,
+        food.lng,
+        ngo.lat,
+        ngo.lng
+      );
+
+      const estimatedTime = (distance / 30) * 60; // 30 km/h avg city speed
+
+      let canConfirm = false;
+
+      /* -------- DISTANCE THRESHOLD LOGIC -------- */
+      if (distance <= 8) {
         score += 50;
+        canConfirm = true;
+      } else if (distance <= 20) {
+        score += 30;
+        canConfirm = true;
+      } else {
+        canConfirm = false;
       }
 
-      // QUANTITY MATCH
+      /* -------- QUANTITY MATCH -------- */
       if (Number(food.quantity) >= Number(ngo.quantityNeeded)) {
         score += 30;
       }
 
-      // URGENCY BONUS
-      if (ngo.urgency === "High") score += 20;
+      /* -------- URGENCY BONUS -------- */
+      if (ngo.urgency === "High") {
+        score += 20;
+      }
 
-      if (score > 0) {
+      /* -------- SHOW MATCH ONLY IF WITHIN 20KM -------- */
+      if (distance <= 20) {
         const card = document.createElement("article");
         card.className = "card match-card";
 
@@ -60,7 +96,8 @@ async function generateMatches() {
               <div class="match-title">Food</div>
               <div class="match-main">${food.title}</div>
               <div class="match-sub">Qty: ${food.quantity}</div>
-              <div class="match-sub">Location: ${food.location}</div>
+              <div class="match-sub">Distance: ${distance.toFixed(2)} km</div>
+              <div class="match-sub">ETA: ${estimatedTime.toFixed(0)} mins</div>
             </div>
 
             <div class="match-arrow">→</div>
@@ -69,33 +106,51 @@ async function generateMatches() {
               <div class="match-title">NGO</div>
               <div class="match-main">${ngo.ngoName}</div>
               <div class="match-sub">Needs: ${ngo.quantityNeeded}</div>
-              <div class="match-sub">Location: ${ngo.location}</div>
+              <div class="match-sub">Urgency: ${ngo.urgency}</div>
             </div>
           </div>
 
           <div class="match-footer">
-            <button class="confirm-btn">Confirm Match</button>
+            ${
+              canConfirm
+                ? `<button class="confirm-btn">Confirm Match</button>`
+                : `<div class="chip danger">Too Far</div>`
+            }
           </div>
         `;
 
-        card.querySelector(".confirm-btn").addEventListener("click", async () => {
-          await updateDoc(doc(db, "FoodSurplus", foodDoc.id), {
-            status: "matched"
-          });
+        const confirmBtn = card.querySelector(".confirm-btn");
 
-          await updateDoc(doc(db, "NGORequests", ngoDoc.id), {
-            status: "fulfilled"
-          });
+        if (confirmBtn) {
+          confirmBtn.addEventListener("click", async () => {
+            await updateDoc(doc(db, "FoodSurplus", foodDoc.id), {
+              status: "matched"
+            });
 
-          generateMatches();
-        });
+            await updateDoc(doc(db, "NGORequests", ngoDoc.id), {
+              status: "fulfilled"
+            });
+
+            generateMatches();
+          });
+        }
 
         matchGrid.appendChild(card);
       }
     });
   });
+
+  /* -------- EMPTY STATE -------- */
+  if (matchGrid.innerHTML === "") {
+    matchGrid.innerHTML = `
+      <div class="card">
+        <p class="muted">No nearby smart matches available.</p>
+      </div>
+    `;
+  }
 }
 
+/* -------- REAL-TIME REFRESH -------- */
 generateMatches();
 
 onSnapshot(collection(db, "FoodSurplus"), generateMatches);

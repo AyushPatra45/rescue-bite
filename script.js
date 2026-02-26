@@ -1,7 +1,6 @@
-console.log("Script is running");
+console.log("Script running with GEO enabled");
 
 import { db } from "./firebase-config.js";
-
 import {
   collection,
   addDoc,
@@ -14,9 +13,10 @@ import {
 const form = document.getElementById("foodForm");
 const ngoForm = document.getElementById("ngoForm");
 const foodList = document.getElementById("foodList");
+const resultBox = document.getElementById("matchResult");
 
 
-// ---------------- FOOD FORM ----------------
+/* ---------------- FOOD FORM ---------------- */
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -24,25 +24,37 @@ form.addEventListener("submit", async (e) => {
   const quantity = Number(document.getElementById("quantity").value);
   const location = document.getElementById("location").value.trim();
 
-  try {
-    await addDoc(collection(db, "FoodSurplus"), {
-      title,
-      quantity,
-      location,
-      status: "available",
-      createdAt: new Date()
-    });
-
-    alert("Food Posted Successfully!");
-    form.reset();
-
-  } catch (error) {
-    console.error("Error adding document: ", error);
+  if (!navigator.geolocation) {
+    resultBox.innerText = "❌ Geolocation not supported.";
+    return;
   }
+
+  navigator.geolocation.getCurrentPosition(async (position) => {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+
+    try {
+      await addDoc(collection(db, "FoodSurplus"), {
+        title,
+        quantity,
+        location,
+        lat,
+        lng,
+        status: "available",
+        createdAt: new Date()
+      });
+
+      resultBox.innerText = "✅ Food Posted Successfully!";
+      form.reset();
+
+    } catch (error) {
+      console.error("Error adding food:", error);
+    }
+  });
 });
 
 
-// ---------------- NGO FORM ----------------
+/* ---------------- NGO FORM ---------------- */
 ngoForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -51,66 +63,38 @@ ngoForm.addEventListener("submit", async (e) => {
   const locationNGO = document.getElementById("locationNGO").value.trim();
   const urgency = document.getElementById("urgency").value;
 
-  try {
-    // Save NGO Request
-    await addDoc(collection(db, "NGORequests"), {
-      ngoName,
-      quantityNeeded,
-      location: locationNGO,
-      urgency,
-      createdAt: new Date(),
-      status: "pending"
-    });
-
-    // MATCH CHECK + UPDATE
-    const foodSnapshot = await getDocs(collection(db, "FoodSurplus"));
-
-    let matchFound = false;
-
-    for (const foodDoc of foodSnapshot.docs) {
-      const foodData = foodDoc.data();
-
-      const foodLocation = String(foodData.location).trim().toLowerCase();
-      const ngoLocation = locationNGO.toLowerCase();
-      const foodQuantity = Number(foodData.quantity);
-
-      if (
-        foodData.status === "available" &&
-        foodLocation === ngoLocation &&
-        foodQuantity >= quantityNeeded
-      ) {
-        matchFound = true;
-
-        await updateDoc(doc(db, "FoodSurplus", foodDoc.id), {
-          status: "matched"
-        });
-
-        break;
-      }
-    }
-
-    const resultBox = document.getElementById("matchResult");
-    resultBox.innerText = "";
-
-    if (matchFound) {
-      resultBox.innerText =
-        "🔥 MATCH FOUND! Food available in " + locationNGO +
-        "\n✅ NGO Requirement Posted Successfully!";
-    } else {
-      resultBox.innerText =
-        "❌ No matching food found in " + locationNGO +
-        "\n✅ NGO Requirement Posted Successfully!";
-    }
-
-    ngoForm.reset();
-
-  } catch (error) {
-    console.error("Error adding NGO request: ", error);
+  if (!navigator.geolocation) {
+    resultBox.innerText = "❌ Geolocation not supported.";
+    return;
   }
+
+  navigator.geolocation.getCurrentPosition(async (position) => {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+
+    try {
+      await addDoc(collection(db, "NGORequests"), {
+        ngoName,
+        quantityNeeded,
+        location: locationNGO,
+        urgency,
+        lat,
+        lng,
+        status: "pending",
+        createdAt: new Date()
+      });
+
+      resultBox.innerText = "✅ NGO Requirement Posted!";
+      ngoForm.reset();
+
+    } catch (error) {
+      console.error("Error adding NGO request:", error);
+    }
+  });
 });
 
 
-// ---------------- REAL-TIME FOOD LIST ----------------
+/* ---------------- REAL-TIME FOOD LIST ---------------- */
 onSnapshot(collection(db, "FoodSurplus"), (snapshot) => {
   foodList.innerHTML = "";
 
