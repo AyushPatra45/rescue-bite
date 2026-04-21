@@ -1,6 +1,6 @@
 // auth-guard.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDKOtJ9bPWH91-stp-iow8v9f_yNRKUi3c",
@@ -19,5 +19,13 @@ const auth = getAuth(app);
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "index.html";
+  }
+});
+
+// Global Logout Handler
+document.addEventListener("click", (e) => {
+  if (e.target && e.target.classList.contains("logout-btn")) {
+    e.preventDefault();
+    signOut(auth).catch((err) => console.error("Logout error:", err));
   }
 });
