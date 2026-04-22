@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Smart Match • Rescue Bite</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Leaflet.js — free map library, no API key needed -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -21,12 +24,12 @@
   <header class="topbar">
     <div class="brand">
       <h1>Smart Match 🤝</h1>
-      <p>Suggested pairings scored by distance, quantity and urgency.</p>
-      <small class="muted">Confirm a match to complete the rescue and update Firestore.</small>
+      <p>Real-time donor–NGO matching with live map routing.</p>
+      <small class="muted">Road distance & driving time powered by OSRM · Map by OpenStreetMap</small>
     </div>
   </header>
 
-  <main class="container">
+  <main class="container" style="max-width:1200px;">
 
     <!-- Quick Actions -->
     <section class="card" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
@@ -40,17 +43,53 @@
       </div>
     </section>
 
+    <!-- Summary Stats -->
+    <section class="dash-grid" id="statsBar" style="margin-bottom:22px;">
+      <div class="card kpi">
+        <div class="kpi-label">Matches Found</div>
+        <div class="kpi-value" id="statMatches">—</div>
+        <div class="kpi-foot">donor–NGO pairings</div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-label">Avg Road Distance</div>
+        <div class="kpi-value" id="statAvgDist">—</div>
+        <div class="kpi-foot">kilometres</div>
+      </div>
+      <div class="card kpi">
+        <div class="kpi-label">Avg Driving Time</div>
+        <div class="kpi-value" id="statAvgTime">—</div>
+        <div class="kpi-foot">minutes</div>
+      </div>
+    </section>
+
+    <!-- LIVE MAP -->
+    <section class="card" style="padding:0; overflow:hidden; border-radius:18px;">
+      <div style="padding:18px 22px 12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <div>
+          <h2 style="margin:0;">Live Map</h2>
+          <p class="muted" style="margin:4px 0 0;">🟢 Donors &nbsp; 🔴 NGOs &nbsp; — Click a match card to see the driving route.</p>
+        </div>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <span class="chip ok" style="font-size:10px;">● Donor</span>
+          <span class="chip danger" style="font-size:10px;">● NGO</span>
+          <span class="chip mid" style="font-size:10px;">— Route</span>
+        </div>
+      </div>
+      <div id="map" style="height:400px; width:100%;"></div>
+    </section>
+
     <!-- Filter Bar -->
     <section class="card">
       <div class="match-head">
         <div>
           <h2 style="margin:0;">Suggested Matches</h2>
-          <p class="muted" style="margin:6px 0 0;">Only showing donors &amp; NGOs within 20 km of each other.</p>
+          <p class="muted" style="margin:6px 0 0;">Real road distances via OSRM routing API · within 20 km.</p>
         </div>
         <div class="match-actions">
           <select id="sortSelect">
             <option value="score">Sort: Highest Score</option>
             <option value="distance">Sort: Nearest Distance</option>
+            <option value="time">Sort: Fastest ETA</option>
           </select>
           <button type="button" id="refreshBtn">↻ Refresh</button>
         </div>
@@ -61,15 +100,13 @@
     <section class="match-grid" id="matchGrid">
       <div class="card" style="grid-column:1 / -1; text-align:center; padding:40px;">
         <div class="loader"></div>
-        <p class="muted">Analysing matches…</p>
+        <p class="muted">Fetching data & computing routes…</p>
       </div>
     </section>
 
   </main>
 
   <footer class="footer">Built for good • Rescue Bite © 2026</footer>
-
-  <!-- Toast container for confirm/reject feedback -->
   <div class="toast-container" id="toastContainer"></div>
 
   <script type="module" src="auth-guard.js"></script>
