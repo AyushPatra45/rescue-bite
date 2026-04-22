@@ -6,10 +6,8 @@
   <title>Dashboard • Rescue Bite</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-  <!-- ✅ Navbar (updated links for Welcome/Role flow) -->
   <nav class="navbar">
     <h2 class="logo">Rescue Bite 🍱</h2>
     <div class="nav-links">
@@ -20,111 +18,70 @@
     </div>
   </nav>
 
-  <!-- Header -->
   <header class="topbar">
     <div class="brand">
       <h1>Dashboard 📊</h1>
-      <p>Quick overview of activity (live counts via Firestore).</p>
-      <small class="muted">Track food posts, NGO needs, and matches in real time.</small>
+      <p>Live overview of food posts, NGO needs, and completed matches.</p>
+      <small class="muted">All numbers update in real time via Firebase Firestore</small>
     </div>
   </header>
 
   <main class="container">
 
-    <!-- ✅ Quick Actions row (UI only) -->
+    <!-- Quick Actions -->
     <section class="card" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
       <div>
         <h2 style="margin:0;">Quick Actions</h2>
-        <p class="muted" style="margin:6px 0 0;">Go to donor/NGO entry pages or review matches.</p>
+        <p class="muted" style="margin:6px 0 0;">Jump to donor/NGO entry or review matches.</p>
       </div>
-
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a href="donate.html" class="btn-primary" style="padding:12px 16px;">+ Donate Food</a>
-        <a href="request.html" class="btn-secondary" style="padding:12px 16px;">+ Request Food</a>
-        <a href="smart-match.html" class="btn-secondary" style="padding:12px 16px;">View Smart Match</a>
+        <a href="donate.html"      class="btn-primary"   style="padding:11px 18px;">+ Donate Food</a>
+        <a href="request.html"     class="btn-secondary" style="padding:11px 18px;">+ Request Food</a>
+        <a href="smart-match.html" class="btn-secondary" style="padding:11px 18px;">Smart Match</a>
       </div>
     </section>
 
-    <!-- KPI CARDS -->
+    <!-- KPI Cards -->
     <section class="dash-grid">
       <div class="card kpi">
         <div class="kpi-label">Active Food Posts</div>
-        <div class="kpi-value">—</div>
-        <div class="kpi-foot">surplus listed</div>
+        <div class="kpi-value" id="kpiFood">—</div>
+        <div class="kpi-foot">surplus available</div>
       </div>
-
       <div class="card kpi">
         <div class="kpi-label">Active NGO Needs</div>
-        <div class="kpi-value">—</div>
+        <div class="kpi-value" id="kpiNgo">—</div>
         <div class="kpi-foot">requests pending</div>
       </div>
-
       <div class="card kpi">
         <div class="kpi-label">Matches Made</div>
-        <div class="kpi-value">—</div>
+        <div class="kpi-value" id="kpiMatch">—</div>
         <div class="kpi-foot">rescues completed</div>
       </div>
     </section>
 
-    <!-- RECENT LISTS -->
+    <!-- Live Lists -->
     <section class="dash-grid-2">
-
       <div class="card">
         <h2>Recent Food Posts</h2>
-        <p class="muted">Sample UI (can be connected to Firestore later).</p>
-
-        <div class="list">
-          <div class="list-item">
-            <div>
-              <div class="item-title">Cooked Rice</div>
-              <div class="item-sub">20 meals • Tambaram</div>
-            </div>
-            <span class="chip ok">Available</span>
-          </div>
-
-          <div class="list-item">
-            <div>
-              <div class="item-title">Bread Packs</div>
-              <div class="item-sub">12 packs • Velachery</div>
-            </div>
-            <span class="chip warn">Expiring Soon</span>
-          </div>
+        <p class="muted">Live feed — available donations.</p>
+        <div class="list" id="recentFoodList">
+          <div class="loader"></div>
         </div>
       </div>
-
       <div class="card">
         <h2>Recent NGO Needs</h2>
-        <p class="muted">Sample UI (can be connected to Firestore later).</p>
-
-        <div class="list">
-          <div class="list-item">
-            <div>
-              <div class="item-title">Helping Hands</div>
-              <div class="item-sub">15 meals • Tambaram</div>
-            </div>
-            <span class="chip danger">High</span>
-          </div>
-
-          <div class="list-item">
-            <div>
-              <div class="item-title">Night Shelter</div>
-              <div class="item-sub">10 meals • Medavakkam</div>
-            </div>
-            <span class="chip mid">Medium</span>
-          </div>
+        <p class="muted">Live feed — pending requests.</p>
+        <div class="list" id="recentNgoList">
+          <div class="loader"></div>
         </div>
       </div>
-
     </section>
 
   </main>
 
-  <!-- ✅ Footer -->
-  <footer class="footer">
-    Built for Hackathon • Rescue Bite © 2026
-  </footer>
+  <footer class="footer">Built for good • Rescue Bite © 2026</footer>
 
-  <!-- Keep your existing JS -->
   <script type="module" src="auth-guard.js"></script>
   <script type="module" src="dashboard.js"></script>
 </body>

@@ -6,7 +6,6 @@
   <title>Choose Role • Rescue Bite</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
   <nav class="navbar">
@@ -21,26 +20,38 @@
 
   <main class="container">
     <section class="card role-card">
-      <h1 style="margin:0;">Welcome 👋</h1>
-      <p class="muted" style="margin-top:8px;">Choose what you want to do today.</p>
+      <h1 style="font-size:28px; margin:0;">Welcome back 👋</h1>
+      <p class="muted" style="margin-top:8px; font-size:15px;">What would you like to do today?</p>
 
       <div class="role-grid">
         <a href="donate.html" class="role-btn">
+          <span class="role-icon">🍱</span>
           <div class="role-title">Donate Food</div>
-          <div class="muted">Post surplus food for pickup</div>
+          <div class="role-sub">Post surplus food for NGOs to claim, with GPS-powered smart matching.</div>
         </a>
 
         <a href="request.html" class="role-btn">
+          <span class="role-icon">🏢</span>
           <div class="role-title">Request Food</div>
-          <div class="muted">NGOs can post urgent needs</div>
+          <div class="role-sub">NGOs can post urgent food needs and get matched with nearby donors instantly.</div>
+        </a>
+
+        <a href="dashboard.html" class="role-btn">
+          <span class="role-icon">📊</span>
+          <div class="role-title">Dashboard</div>
+          <div class="role-sub">Live overview of food posts, NGO requests and completed matches in real time.</div>
+        </a>
+
+        <a href="smart-match.html" class="role-btn">
+          <span class="role-icon">🤝</span>
+          <div class="role-title">Smart Match</div>
+          <div class="role-sub">Review donor-NGO pairings scored by distance, quantity and urgency — confirm to rescue.</div>
         </a>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    Built for Hackathon • Rescue Bite © 2026
-  </footer>
+  <footer class="footer">Built for good • Rescue Bite © 2026</footer>
 
   <script type="module" src="auth-guard.js"></script>
 </body>

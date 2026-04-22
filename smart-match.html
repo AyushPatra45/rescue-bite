@@ -6,10 +6,8 @@
   <title>Smart Match • Rescue Bite</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-  <!-- ✅ Navbar (updated links for Welcome/Role flow) -->
   <nav class="navbar">
     <h2 class="logo">Rescue Bite 🍱</h2>
     <div class="nav-links">
@@ -20,163 +18,61 @@
     </div>
   </nav>
 
-  <!-- Header -->
   <header class="topbar">
     <div class="brand">
       <h1>Smart Match 🤝</h1>
-      <p>Suggested matches based on distance + quantity + urgency.</p>
-      <small class="muted">Confirm the best pairings to complete a rescue.</small>
+      <p>Suggested pairings scored by distance, quantity and urgency.</p>
+      <small class="muted">Confirm a match to complete the rescue and update Firestore.</small>
     </div>
   </header>
 
   <main class="container">
 
-    <!-- ✅ Quick Actions (UI only) -->
+    <!-- Quick Actions -->
     <section class="card" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
       <div>
         <h2 style="margin:0;">Quick Actions</h2>
-        <p class="muted" style="margin:6px 0 0;">Add a new donor/NGO entry to generate matches.</p>
+        <p class="muted" style="margin:6px 0 0;">Add a new entry to generate more matches.</p>
       </div>
-
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a href="donate.html" class="btn-primary" style="padding:12px 16px;">+ Donate Food</a>
-        <a href="request.html" class="btn-secondary" style="padding:12px 16px;">+ Request Food</a>
+        <a href="donate.html"  class="btn-primary"   style="padding:11px 18px;">+ Donate Food</a>
+        <a href="request.html" class="btn-secondary" style="padding:11px 18px;">+ Request Food</a>
       </div>
     </section>
 
-    <!-- Filters -->
+    <!-- Filter Bar -->
     <section class="card">
       <div class="match-head">
         <div>
           <h2 style="margin:0;">Suggested Matches</h2>
-          <p class="muted" style="margin:6px 0 0;">Review and confirm the best pairings.</p>
+          <p class="muted" style="margin:6px 0 0;">Only showing donors &amp; NGOs within 20 km of each other.</p>
         </div>
-
         <div class="match-actions">
-          <select class="filter">
-            <option>Sort: Highest Score</option>
-            <option>Sort: Nearest Distance</option>
-            <option>Sort: Expiry Soon</option>
+          <select id="sortSelect">
+            <option value="score">Sort: Highest Score</option>
+            <option value="distance">Sort: Nearest Distance</option>
           </select>
-          <button type="button" id="refreshBtn">Refresh</button>
+          <button type="button" id="refreshBtn">↻ Refresh</button>
         </div>
       </div>
     </section>
 
-    <!-- ✅ Match Grid (IMPORTANT: keep this class name for smart-match.js) -->
-    <section class="match-grid">
-
-      <!-- Placeholder cards (your JS will replace these when dynamic) -->
-      <article class="card match-card">
-        <div class="match-top">
-          <span class="chip ok">Score: 86%</span>
-          <span class="chip mid">3.2 km</span>
-          <span class="chip warn">ETA: 6 mins</span>
-        </div>
-
-        <div class="match-body">
-          <div class="match-col">
-            <div class="match-title">Food</div>
-            <div class="match-main">Cooked Rice</div>
-            <div class="match-sub">Qty: 20 meals</div>
-            <div class="match-sub">Location: Tambaram</div>
-          </div>
-
-          <div class="match-arrow">→</div>
-
-          <div class="match-col">
-            <div class="match-title">NGO</div>
-            <div class="match-main">Helping Hands</div>
-            <div class="match-sub">Needs: 15 meals</div>
-            <div class="match-sub">Urgency: High</div>
-          </div>
-        </div>
-
-        <div class="match-footer">
-          <button type="button">Confirm Match</button>
-          <button type="button" class="btn-ghost">Reject</button>
-        </div>
-      </article>
-
-      <article class="card match-card">
-        <div class="match-top">
-          <span class="chip ok">Score: 74%</span>
-          <span class="chip mid">7.8 km</span>
-          <span class="chip ok">ETA: 16 mins</span>
-        </div>
-
-        <div class="match-body">
-          <div class="match-col">
-            <div class="match-title">Food</div>
-            <div class="match-main">Biscuit Packs</div>
-            <div class="match-sub">Qty: 40 packs</div>
-            <div class="match-sub">Location: Velachery</div>
-          </div>
-
-          <div class="match-arrow">→</div>
-
-          <div class="match-col">
-            <div class="match-title">NGO</div>
-            <div class="match-main">Night Shelter</div>
-            <div class="match-sub">Needs: 30 packs</div>
-            <div class="match-sub">Urgency: Medium</div>
-          </div>
-        </div>
-
-        <div class="match-footer">
-          <button type="button">Confirm Match</button>
-          <button type="button" class="btn-ghost">Reject</button>
-        </div>
-      </article>
-
-      <article class="card match-card">
-        <div class="match-top">
-          <span class="chip mid">Score: 61%</span>
-          <span class="chip mid">5.4 km</span>
-          <span class="chip danger">ETA: 12 mins</span>
-        </div>
-
-        <div class="match-body">
-          <div class="match-col">
-            <div class="match-title">Food</div>
-            <div class="match-main">Veg Curry</div>
-            <div class="match-sub">Qty: 10 meals</div>
-            <div class="match-sub">Location: Pallikaranai</div>
-          </div>
-
-          <div class="match-arrow">→</div>
-
-          <div class="match-col">
-            <div class="match-title">NGO</div>
-            <div class="match-main">Community Kitchen</div>
-            <div class="match-sub">Needs: 10 meals</div>
-            <div class="match-sub">Urgency: High</div>
-          </div>
-        </div>
-
-        <div class="match-footer">
-          <button type="button">Confirm Match</button>
-          <button type="button" class="btn-ghost">Reject</button>
-        </div>
-      </article>
-
+    <!-- Match Grid — fully populated by smart-match.js -->
+    <section class="match-grid" id="matchGrid">
+      <div class="card" style="grid-column:1 / -1; text-align:center; padding:40px;">
+        <div class="loader"></div>
+        <p class="muted">Analysing matches…</p>
+      </div>
     </section>
 
   </main>
 
-  <!-- ✅ Footer -->
-  <footer class="footer">
-    Built for Hackathon • Rescue Bite © 2026
-  </footer>
+  <footer class="footer">Built for good • Rescue Bite © 2026</footer>
+
+  <!-- Toast container for confirm/reject feedback -->
+  <div class="toast-container" id="toastContainer"></div>
 
   <script type="module" src="auth-guard.js"></script>
   <script type="module" src="smart-match.js"></script>
-
-  <!-- Optional tiny UI-only refresh (doesn’t touch smart-match.js) -->
-  <script>
-    const btn = document.getElementById("refreshBtn");
-    if (btn) btn.addEventListener("click", () => location.reload());
-  </script>
-
 </body>
 </html>

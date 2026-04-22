@@ -3,108 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Rescue Bite — Real-time food redistribution connecting donors with NGOs." />
   <title>Welcome • Rescue Bite</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-  <!-- Navbar -->
+  <!-- Navbar (pre-login — no internal page links) -->
   <nav class="navbar">
     <h2 class="logo">Rescue Bite 🍱</h2>
     <div class="nav-links">
-      <a href="index.html">Welcome</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="smart-match.html">Smart Match</a>
+      <a href="#about">About</a>
+      <a href="#login">Sign In</a>
     </div>
   </nav>
 
   <!-- Hero -->
-  <header class="hero">
+  <header class="hero" id="about">
     <div class="hero-inner">
-      <h1>Rescue Surplus. Feed Hope.</h1>
+      <h1>Rescue Surplus.<br>Feed Hope.</h1>
       <p class="muted">
-        A real-time food redistribution platform connecting donors and NGOs instantly.
+        A real-time food redistribution platform connecting donors and NGOs instantly — powered by Firebase Firestore.
       </p>
 
       <!-- Login Card -->
-      <div class="auth-card">
-        <h3 style="margin:0 0 6px;">Sign in</h3>
-        <p class="muted" style="margin:0 0 14px;">Login with valid Firebase credentials.</p>
+      <div class="auth-card" id="login">
+        <h3>Sign in to continue</h3>
+        <p class="muted" style="margin: 0 0 16px;">Enter your Firebase credentials to access the platform.</p>
 
-        <!-- ✅ REAL LOGIN FORM -->
         <form id="loginForm" class="form">
-          <input id="loginEmail" type="email" placeholder="Email" required />
+          <input id="loginEmail" type="email" placeholder="Email address" required />
           <input id="loginPassword" type="password" placeholder="Password" required />
-
-          <button type="submit" class="btn-primary big-btn">Login</button>
+          <button type="submit" id="loginBtn" class="btn-primary big-btn">Sign In →</button>
         </form>
 
-        <!-- ✅ Message Box -->
-        <div id="loginMsg" class="match-result" style="display:none; margin-top:12px;"></div>
-
-        <p class="muted" style="margin-top: 12px; font-size:12px;">
-          (Email/Password must be enabled in Firebase Auth → Users must exist)
-        </p>
+        <div id="loginMsg" style="margin-top:12px; padding:12px 16px; border-radius:12px;
+             font-weight:600; font-size:14px; display:none;"></div>
       </div>
     </div>
   </header>
 
-  <footer class="footer">
-    Built for Hackathon • Rescue Bite © 2026
-  </footer>
+  <footer class="footer">Built for good • Rescue Bite © 2026</footer>
 
-  <!-- ✅ Firebase Auth Logic -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { auth } from "./firebase-config.js";
+    import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDKOtJ9bPWH91-stp-iow8v9f_yNRKUi3c",
-      authDomain: "rescue-bite-d5058.firebaseapp.com",
-      projectId: "rescue-bite-d5058",
-      storageBucket: "rescue-bite-d5058.firebasestorage.app",
-      messagingSenderId: "1025906539351",
-      appId: "1:1025906539351:web:e3bfbea5e18748c5531c12",
-      measurementId: "G-MYJE5S51T2"
-    };
+    // Already logged in? Skip straight to role selection
+    onAuthStateChanged(auth, (user) => {
+      if (user) window.location.href = "role.html";
+    });
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    const form = document.getElementById("loginForm");
-    const msgBox = document.getElementById("loginMsg");
+    const form     = document.getElementById("loginForm");
+    const msgBox   = document.getElementById("loginMsg");
+    const loginBtn = document.getElementById("loginBtn");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const email = document.getElementById("loginEmail").value.trim();
+      const email    = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value.trim();
 
-      // Reset message UI
       msgBox.style.display = "none";
-      msgBox.textContent = "";
+      loginBtn.textContent = "Signing in…";
+      loginBtn.disabled    = true;
 
       try {
         await signInWithEmailAndPassword(auth, email, password);
-
-        // ✅ success message
-        msgBox.style.display = "block";
-        msgBox.style.background = "rgba(34,197,94,0.15)";
-        msgBox.style.border = "1px solid rgba(34,197,94,0.4)";
-        msgBox.textContent = "✅ Login successful! Redirecting...";
-
-        setTimeout(() => {
-          window.location.href = "role.html";
-        }, 700);
-
+        msgBox.style.cssText = "display:block; margin-top:12px; padding:12px 16px; border-radius:12px; font-weight:600; font-size:14px; background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.3); color:#86efac;";
+        msgBox.textContent = "✅ Login successful! Redirecting…";
+        setTimeout(() => { window.location.href = "role.html"; }, 700);
       } catch (err) {
-        // ❌ error message
-        msgBox.style.display = "block";
-        msgBox.style.background = "rgba(239,68,68,0.15)";
-        msgBox.style.border = "1px solid rgba(239,68,68,0.4)";
-        msgBox.textContent = "❌ Invalid email or password.";
-        console.error("Login error:", err);
+        msgBox.style.cssText = "display:block; margin-top:12px; padding:12px 16px; border-radius:12px; font-weight:600; font-size:14px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); color:#fca5a5;";
+        msgBox.textContent = "❌ Invalid email or password. Please try again.";
+        loginBtn.textContent = "Sign In →";
+        loginBtn.disabled    = false;
+        console.error("Login error:", err.code);
       }
     });
   </script>
