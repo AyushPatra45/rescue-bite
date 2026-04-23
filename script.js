@@ -38,6 +38,31 @@ function showMsg(el, message, type = "success") {
 }
 
 /* ================================================
+   GEOCODE LOCATION (OpenStreetMap Nominatim)
+   Converts a location name → { lat, lng }
+   Free, no API key needed.
+================================================ */
+async function geocodeLocation(locationText) {
+  const url = `https://nominatim.openstreetmap.org/search?` +
+    `q=${encodeURIComponent(locationText)}&format=json&limit=1`;
+
+  const res = await fetch(url, {
+    headers: { "User-Agent": "RescueBite-FoodApp/1.0" }
+  });
+
+  const data = await res.json();
+
+  if (!data || data.length === 0) {
+    return null;
+  }
+
+  return {
+    lat: parseFloat(data[0].lat),
+    lng: parseFloat(data[0].lon)
+  };
+}
+
+/* ================================================
    FOOD DONATION FORM  (donate.html)
 ================================================ */
 const form        = document.getElementById("foodForm");
@@ -55,44 +80,39 @@ if (form) {
 
     if (foodSuccess) foodSuccess.style.display = "none";
     if (foodError)   foodError.style.display   = "none";
-    if (donateBtn)   { donateBtn.textContent = "📍 Detecting location…"; donateBtn.disabled = true; }
+    if (donateBtn)   { donateBtn.textContent = "📍 Locating address…"; donateBtn.disabled = true; }
 
-    if (!navigator.geolocation) {
-      showMsg(foodError, "❌ Geolocation is not supported by this browser.", "error");
-      if (donateBtn) { donateBtn.textContent = "📍 Post Food with GPS Location"; donateBtn.disabled = false; }
-      return;
-    }
+    try {
+      // Geocode the user-entered location to lat/lng
+      const coords = await geocodeLocation(location);
 
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        try {
-          await addDoc(collection(db, "FoodSurplus"), {
-            title,
-            quantity,
-            location,
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            status: "available",
-            createdAt: new Date()
-          });
-
-          showMsg(foodSuccess, "✅ Food posted! Nearby NGOs can now claim it.", "success");
-          showToast("✅ Food post submitted!", "success");
-          form.reset();
-        } catch (err) {
-          showMsg(foodError, "❌ Failed to post. Please try again.", "error");
-          showToast("❌ Submission failed.", "error");
-          console.error(err);
-        } finally {
-          if (donateBtn) { donateBtn.textContent = "📍 Post Food with GPS Location"; donateBtn.disabled = false; }
-        }
-      },
-      (geoErr) => {
-        showMsg(foodError, "❌ Location access denied. Please enable GPS and retry.", "error");
-        if (donateBtn) { donateBtn.textContent = "📍 Post Food with GPS Location"; donateBtn.disabled = false; }
-        console.error("Geo error:", geoErr);
+      if (!coords) {
+        showMsg(foodError, "❌ Could not find that location. Please enter a more specific address (e.g. Tambaram, Chennai).", "error");
+        showToast("❌ Location not found.", "error");
+        if (donateBtn) { donateBtn.textContent = "📍 Post Food"; donateBtn.disabled = false; }
+        return;
       }
-    );
+
+      await addDoc(collection(db, "FoodSurplus"), {
+        title,
+        quantity,
+        location,
+        lat: coords.lat,
+        lng: coords.lng,
+        status: "available",
+        createdAt: new Date()
+      });
+
+      showMsg(foodSuccess, "✅ Food posted! Nearby NGOs can now claim it.", "success");
+      showToast("✅ Food post submitted!", "success");
+      form.reset();
+    } catch (err) {
+      showMsg(foodError, "❌ Failed to post. Please try again.", "error");
+      showToast("❌ Submission failed.", "error");
+      console.error(err);
+    } finally {
+      if (donateBtn) { donateBtn.textContent = "📍 Post Food"; donateBtn.disabled = false; }
+    }
   });
 }
 
@@ -113,48 +133,43 @@ if (ngoForm) {
     const urgency        = document.getElementById("urgency").value;
 
     if (matchResult) matchResult.style.display = "none";
-    if (requestBtn)  { requestBtn.textContent = "📍 Detecting location…"; requestBtn.disabled = true; }
+    if (requestBtn)  { requestBtn.textContent = "📍 Locating address…"; requestBtn.disabled = true; }
 
-    if (!navigator.geolocation) {
-      showMsg(matchResult, "❌ Geolocation not supported.", "error");
-      if (requestBtn) { requestBtn.textContent = "📍 Post Request with GPS Location"; requestBtn.disabled = false; }
-      return;
-    }
+    try {
+      // Geocode the user-entered location to lat/lng
+      const coords = await geocodeLocation(locationNGO);
 
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        try {
-          await addDoc(collection(db, "NGORequests"), {
-            ngoName,
-            quantityNeeded,
-            location: locationNGO,
-            urgency,
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            status: "pending",
-            createdAt: new Date()
-          });
-
-          showMsg(matchResult,
-            `✅ Request posted for ${ngoName}! Go to Smart Match to find nearby donors.`,
-            "success"
-          );
-          showToast("✅ NGO request submitted!", "success");
-          ngoForm.reset();
-        } catch (err) {
-          showMsg(matchResult, "❌ Failed to post. Please try again.", "error");
-          showToast("❌ Submission failed.", "error");
-          console.error(err);
-        } finally {
-          if (requestBtn) { requestBtn.textContent = "📍 Post Request with GPS Location"; requestBtn.disabled = false; }
-        }
-      },
-      (geoErr) => {
-        showMsg(matchResult, "❌ Location access denied. Enable GPS and retry.", "error");
-        if (requestBtn) { requestBtn.textContent = "📍 Post Request with GPS Location"; requestBtn.disabled = false; }
-        console.error("Geo error:", geoErr);
+      if (!coords) {
+        showMsg(matchResult, "❌ Could not find that location. Please enter a more specific address (e.g. Velachery, Chennai).", "error");
+        showToast("❌ Location not found.", "error");
+        if (requestBtn) { requestBtn.textContent = "📍 Post Request"; requestBtn.disabled = false; }
+        return;
       }
-    );
+
+      await addDoc(collection(db, "NGORequests"), {
+        ngoName,
+        quantityNeeded,
+        location: locationNGO,
+        urgency,
+        lat: coords.lat,
+        lng: coords.lng,
+        status: "pending",
+        createdAt: new Date()
+      });
+
+      showMsg(matchResult,
+        `✅ Request posted for ${ngoName}! Go to Smart Match to find nearby donors.`,
+        "success"
+      );
+      showToast("✅ NGO request submitted!", "success");
+      ngoForm.reset();
+    } catch (err) {
+      showMsg(matchResult, "❌ Failed to post. Please try again.", "error");
+      showToast("❌ Submission failed.", "error");
+      console.error(err);
+    } finally {
+      if (requestBtn) { requestBtn.textContent = "📍 Post Request"; requestBtn.disabled = false; }
+    }
   });
 }
 

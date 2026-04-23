@@ -22,7 +22,6 @@
     <div class="brand">
       <h1>Donate Food 🍱</h1>
       <p>Post surplus food for NGOs to claim.</p>
-      <small class="muted">Real-time powered by Firebase Firestore · GPS location matching</small>
     </div>
   </header>
 
@@ -30,13 +29,13 @@
 
     <section class="card">
       <h2>Post Surplus Food</h2>
-      <p class="muted">Fill in the details. Your GPS location will be captured automatically for smart matching.</p>
+      <p class="muted">Fill in the details. Enter your location and we'll match you with nearby NGOs.</p>
 
       <form id="foodForm" class="form">
         <input type="text"   id="title"    placeholder="Food title (e.g. Cooked Rice, Bread Packs)" required />
         <input type="number" id="quantity" placeholder="Quantity (servings / packs)" min="1" required />
-        <input type="text"   id="location" placeholder="Location description (e.g. Tambaram)" required />
-        <button type="submit" id="donateBtn">📍 Post Food with GPS Location</button>
+        <input type="text"   id="location" placeholder="Enter your location (e.g. Tambaram, Chennai)" required />
+        <button type="submit" id="donateBtn">📍 Post Food</button>
       </form>
 
       <div id="foodSuccess" class="success-msg"></div>
